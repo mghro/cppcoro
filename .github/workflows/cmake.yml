@@ -21,17 +21,17 @@ jobs:
         config:
           - {
             name: "Linux g++ 10.2",
-            os: ubuntu-latest,
+            os: ubuntu-20.04,
             cxx: "g++-10",
           }
           - {
             name: "Linux clang-10",
-            os: ubuntu-latest,
+            os: ubuntu-20.04,
             cxx: "clang++-10",
           }
           - {
             name: "Linux clang-11",
-            os: ubuntu-latest,
+            os: ubuntu-20.04,
             cxx: "clang++-11",
           }
 
