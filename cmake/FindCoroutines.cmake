@@ -100,6 +100,7 @@ if(TARGET std::coroutines)
     return()
 endif()
 
+include(CheckCXXCompilerFlag)
 include(CMakePushCheckState)
 include(CheckIncludeFileCXX)
 include(CheckCXXSourceCompiles)
