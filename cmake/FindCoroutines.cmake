@@ -168,7 +168,7 @@ if(find_experimental)
     if(NOT _CXX_COROUTINES_HAVE_EXPERIMENTAL_HEADER)
         cmake_push_check_state()
         set(CMAKE_REQUIRED_FLAGS "${_CXX_COROUTINES_EXTRA_FLAGS}")
-        check_include_file_cxx("coroutine" _CXX_COROUTINES_HAVE_EXPERIMENTAL_HEADER_WITH_FLAG)
+        check_include_file_cxx("experimental/coroutine" _CXX_COROUTINES_HAVE_EXPERIMENTAL_HEADER_WITH_FLAG)
         set(_CXX_COROUTINES_HAVE_EXPERIMENTAL_HEADER ${_CXX_COROUTINES_HAVE_EXPERIMENTAL_HEADER_WITH_FLAG})
         cmake_pop_check_state()
     endif()
@@ -206,7 +206,7 @@ if(CXX_COROUTINES_HAVE_COROUTINES)
             int result;
             present get_return_object() { return present{*this}; }
             @CXX_COROUTINES_NAMESPACE@::suspend_never initial_suspend() { return {}; }
-            @CXX_COROUTINES_NAMESPACE@::suspend_always final_suspend() { return {}; }
+            @CXX_COROUTINES_NAMESPACE@::suspend_always final_suspend() noexcept { return {}; }
             void return_value(int i) { result = i; }
             void unhandled_exception() {}
           };
