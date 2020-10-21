@@ -108,13 +108,16 @@ cmake_push_check_state()
 
 set(CMAKE_REQUIRED_QUIET ${Coroutines_FIND_QUIETLY})
 
-# All of our tests required C++17 or later
-if(("x${CMAKE_CXX_COMPILER_ID}" MATCHES "x.*Clang" AND "x${CMAKE_CXX_SIMULATE_ID}" STREQUAL "xMSVC") OR "x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xMSVC")
-    set(_CXX_COROUTINES_STD17 "/std:c++17")
-    set(_CXX_COROUTINES_AWAIT "/await")
-else()
-    set(_CXX_COROUTINES_STD17 "-std=c++17")
-    set(_CXX_COROUTINES_AWAIT "-fcoroutines-ts")
+check_cxx_compiler_flag(/await _CXX_COROUTINES_SUPPORTS_MS_FLAG)
+check_cxx_compiler_flag(-fcoroutines-ts _CXX_COROUTINES_SUPPORTS_TS_FLAG)
+check_cxx_compiler_flag(-fcoroutines _CXX_COROUTINES_SUPPORTS_CORO_FLAG)
+
+if(_CXX_COROUTINES_SUPPORTS_MS_FLAG)
+    set(_CXX_COROUTINES_EXTRA_FLAGS "/await")
+elseif(_CXX_COROUTINES_SUPPORTS_TS_FLAG)
+    set(_CXX_COROUTINES_EXTRA_FLAGS "-fcoroutines-ts")
+elseif(_CXX_COROUTINES_SUPPORTS_CORO_FLAG)
+    set(_CXX_COROUTINES_EXTRA_FLAGS "-fcoroutines")
 endif()
 
 # Normalize and check the component list we were given
@@ -223,7 +226,7 @@ if(CXX_COROUTINES_HAVE_COROUTINES)
 
     if(NOT CXX_COROUTINES_NO_AWAIT_NEEDED)
         # Add the -fcoroutines-ts (or /await) flag
-        set(CMAKE_REQUIRED_FLAGS "${_CXX_COROUTINES_STD17} ${_CXX_COROUTINES_AWAIT}")
+        set(CMAKE_REQUIRED_FLAGS "${_CXX_COROUTINES_EXTRA_FLAGS}")
         check_cxx_source_compiles("${code}" CXX_COROUTINES_AWAIT_NEEDED)
         set(can_link ${CXX_COROUTINES_AWAIT_NEEDED})
     endif()
@@ -235,7 +238,7 @@ if(CXX_COROUTINES_HAVE_COROUTINES)
         if(CXX_COROUTINES_NO_AWAIT_NEEDED)
             # Nothing to add...
         elseif(CXX_COROUTINES_AWAIT_NEEDED)
-            target_compile_options(std::coroutines INTERFACE ${_CXX_COROUTINES_AWAIT})
+            target_compile_options(std::coroutines INTERFACE ${_CXX_COROUTINES_EXTRA_FLAGS})
         endif()
     else()
         set(CXX_COROUTINES_HAVE_COROUTINES FALSE)
@@ -247,5 +250,5 @@ cmake_pop_check_state()
 set(Coroutines_FOUND ${_found} CACHE BOOL "TRUE if we can compile and link a program using std::coroutines" FORCE)
 
 if(Coroutines_FIND_REQUIRED AND NOT Coroutines_FOUND)
-    message(FATAL_ERROR "Cannot compile simple program using std::coroutines")
+    message(FATAL_ERROR "Cannot compile simple program using std::coroutines. Is C++17 or later activated?")
 endif()
