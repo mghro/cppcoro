@@ -47,7 +47,7 @@ jobs:
           - {
             name: "Windows MSVC 2019 Preview (x64)",
             os: windows-latest,
-            choco: "install visualstudio2019buildtools-preview --pre",
+            choco: "install visualstudio2019community-preview --pre",
             cxx: "cl",
             environment_script: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Preview/VC/Auxiliary/Build/vcvars64.bat",
           }
