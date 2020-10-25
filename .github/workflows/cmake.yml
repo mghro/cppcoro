@@ -44,6 +44,13 @@ jobs:
             cxx: "cl",
             environment_script: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat",
           }
+          - {
+            name: "Windows MSVC 2019 Preview (x64)",
+            os: windows-latest,
+            choco: "install visualstudio2019community-preview --pre",
+            cxx: "cl",
+            environment_script: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Preview/VC/Auxiliary/Build/vcvars64.bat",
+          }
 
     steps:
     - uses: actions/checkout@v2
@@ -78,6 +85,13 @@ jobs:
       run: |
         sudo add-apt-repository ppa:ubuntu-toolchain-r/ppa
         sudo apt-get install g++-10
+
+    - name: Install MSVC
+      id: install_msvc
+      if: startsWith(matrix.config.os, 'windows') && ( matrix.config.choco != '' )
+      uses: crazy-max/ghaction-chocolatey@v1
+      with:
+        args: ${{ matrix.config.choco }}
 
     - name: Create Build Environment
       # Some projects don't allow in-source building, so create a separate build directory
