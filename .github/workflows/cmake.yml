@@ -41,9 +41,9 @@ jobs:
           - {
             name: "Windows MSVC 2017",
             os: windows-latest,
-            choco: 'install visualstudio2017buildtools --ignoredetectedreboot --package-parameters "--add Microsoft.VisualStudio.Workload.MSBuildTools --add Microsoft.VisualStudio.Workload.NativeDesktop" --pre --ignore-detected-reboot',
+            choco: 'install visualstudio2017community --ignoredetectedreboot --package-parameters "--add Microsoft.VisualStudio.Workload.MSBuildTools  --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 --add Microsoft.VisualStudio.Component.VC.CMake.Project" --ignore-detected-reboot',
             cxx: "cl",
-            environment_script: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Preview/VC/Auxiliary/Build/vcvars64.bat",
+            environment_script: "C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/VC/Auxiliary/Build/vcvars64.bat",
           }
           - {
             name: "Windows MSVC 2019",
@@ -54,7 +54,7 @@ jobs:
           - {
             name: "Windows MSVC 2019 Preview",
             os: windows-latest,
-            choco: 'install visualstudio2019buildtools-preview --ignoredetectedreboot --package-parameters "--add Microsoft.VisualStudio.Workload.MSBuildTools --add Microsoft.VisualStudio.Workload.NativeDesktop" --pre --ignore-detected-reboot',
+            choco: 'install visualstudio2019community-preview --ignoredetectedreboot --package-parameters "--add Microsoft.VisualStudio.Workload.MSBuildTools --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 --add Microsoft.VisualStudio.Component.VC.CMake.Project" --pre --ignore-detected-reboot',
             cxx: "cl",
             environment_script: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Preview/VC/Auxiliary/Build/vcvars64.bat",
           }
