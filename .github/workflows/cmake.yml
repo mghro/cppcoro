@@ -40,21 +40,19 @@ jobs:
           }
           - {
             name: "Windows MSVC 2017",
-            os: windows-latest,
-            choco: 'install visualstudio2017community --ignoredetectedreboot --package-parameters "--add Microsoft.VisualStudio.Workload.MSBuildTools --add Microsoft.VisualStudio.Workload.VCTools --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 --add Microsoft.VisualStudio.Component.VC.CMake.Project" --ignore-detected-reboot',
+            os: windows-2016,
             cxx: "cl",
-            environment_script: "C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/VC/Auxiliary/Build/vcvars64.bat",
+            environment_script: '"C:/Program Files (x86)/Microsoft Visual Studio/2017/Enterprise/VC/Auxiliary/Build/vcvars64.bat"',
           }
           - {
             name: "Windows MSVC 2019",
             os: windows-latest,
             cxx: "cl",
-            environment_script: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat",
+            environment_script: '"C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat"',
           }
           - {
             name: "Windows MSVC 2019 Preview",
             os: windows-latest,
-            choco: 'install visualstudio2019community-preview --ignoredetectedreboot --package-parameters "--add Microsoft.VisualStudio.Workload.MSBuildTools --add Microsoft.VisualStudio.Workload.VCTools --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 --add Microsoft.VisualStudio.Component.VC.CMake.Project" --pre --ignore-detected-reboot',
             cxx: "cl",
             environment_script: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Preview/VC/Auxiliary/Build/vcvars64.bat",
           }
@@ -93,13 +91,6 @@ jobs:
         sudo add-apt-repository ppa:ubuntu-toolchain-r/ppa
         sudo apt-get install g++-10
 
-    - name: Install MSVC
-      id: install_msvc
-      if: startsWith(matrix.config.os, 'windows') && ( matrix.config.choco != '' )
-      uses: crazy-max/ghaction-chocolatey@v1
-      with:
-        args: ${{ matrix.config.choco }}
-
     - name: Create Build Environment
       # Some projects don't allow in-source building, so create a separate build directory
       # We'll use this as our working directory for all subsequent commands
@@ -117,11 +108,11 @@ jobs:
       # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
       run: |
         # run environment setup script if any
-        [ -n "${{ matrix.config.environment_script }}" ] && "${{ matrix.config.environment_script }}"
+        ${{ matrix.config.environment_script }}
 
         cmake $GITHUB_WORKSPACE \
           -DCMAKE_BUILD_TYPE=$BUILD_TYPE \
-          -DCMAKE_CXX_STANDARD=20 \
+          -DCMAKE_CXX_STANDARD=17 \
           -DBUILD_TESTING=ON \
           -DCMAKE_CXX_FLAGS=${{ matrix.config.cxx_flags }} \
           -DCMAKE_EXE_LINKER_FLAGS=${{ matrix.config.exe_linker_flags }} \
