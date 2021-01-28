@@ -16,6 +16,9 @@
 
 #include "socket_helpers.hpp"
 
+#include <memory>
+#include <cstring>
+
 #if CPPCORO_OS_WINNT
 # include <WinSock2.h>
 # include <WS2tcpip.h>

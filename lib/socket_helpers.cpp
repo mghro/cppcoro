@@ -6,6 +6,7 @@
 #include "socket_helpers.hpp"
 
 #include <cppcoro/net/ip_endpoint.hpp>
+#include <functional>
 
 #if CPPCORO_OS_WINNT
 #include <cstring>
@@ -74,7 +75,7 @@ int cppcoro::net::detail::ip_endpoint_to_sockaddr(
 		std::memcpy(&ipv6Address.sin6_addr, ipv6EndPoint.address().bytes(), 16);
 		ipv6Address.sin6_port = htons(ipv6EndPoint.port());
 		ipv6Address.sin6_flowinfo = 0;
-		ipv6Address.sin6_scope_struct = SCOPEID_UNSPECIFIED_INIT;
+		ipv6Address.sin6_scope_struct = {0};
 
 		std::memcpy(&address.get(), &ipv6Address, sizeof(ipv6Address));
 

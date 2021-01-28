@@ -1,3 +1,6 @@
+**VaderY/cppcoro** is a fork that includes:
+- Fixed build for windows/msys2/gcc10.2
+
 # Maintained fork of cppcoro
 
 The repository [andreasbuhr/cppcoro](https://github.com/andreasbuhr/cppcoro)
